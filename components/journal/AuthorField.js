@@ -1,11 +1,13 @@
 import React from "react";
-import { TextField } from "final-form-material-ui";
 import { Field } from "react-final-form";
-import { Grid } from "@material-ui/core";
+import { Grid, TextField } from "@material-ui/core";
 
 function AuthorField() {
   return (
-    <Grid container style={{ justifyContent: "space-between", marginBottom: 20}}>
+    <Grid
+      container
+      style={{ justifyContent: "space-between", marginBottom: 20 }}
+    >
       <Grid item>
         <Field
           style={{ width: 300 }}

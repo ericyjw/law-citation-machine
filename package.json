@@ -10,12 +10,17 @@
   "dependencies": {
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.58",
+    "@material-ui/pickers": "3.x.x",
     "@material-ui/styles": "^4.11.4",
+    "@types/yup": "^0.29.11",
     "final-form": "^4.20.2",
     "final-form-material-ui": "^0.3.0",
+    "mui-rff": "^3.0.6",
     "next": "10.2.2",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "react-final-form": "^6.5.3"
+    "react-final-form": "^6.5.3",
+    "yup": "^0.32.9"
   }
 }
