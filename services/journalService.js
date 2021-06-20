@@ -4,5 +4,7 @@ const axios = require("axios")
 export const submitFormToServer = (formData) => {
     axios.post(`${BASE_URL}/api/journal`, {
         formData
+    }).then(res => {
+        console.log(res.data)
     })
 }
