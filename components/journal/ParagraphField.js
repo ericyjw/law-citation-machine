@@ -1,9 +1,8 @@
 import React from "react";
-// import { TextField } from "final-form-material-ui";
 import { Field } from "react-final-form";
-import { Grid, Typography ,TextField} from "@material-ui/core";
+import { Grid, Typography, TextField } from "@material-ui/core";
 
-function ParagraphField() {
+const ParagraphField = ({ index, setStartPara, setEndPara }) => {
   return (
     <Grid container style={{ marginBottom: 20 }}>
       <Grid item>
@@ -13,6 +12,7 @@ function ParagraphField() {
           component={TextField}
           type="text"
           placeholder="Start"
+          onChange={(e) => setStartPara(index, e.target.value)}
         />
       </Grid>
       <Typography variant="h5" style={{ paddingLeft: 20, paddingRight: 20 }}>
@@ -25,10 +25,11 @@ function ParagraphField() {
           component={TextField}
           type="text"
           placeholder="End"
+          onChange={(e) => setEndPara(index, e.target.value)}
         />
       </Grid>
     </Grid>
   );
-}
+};
 
 export default ParagraphField;

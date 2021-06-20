@@ -1,9 +1,8 @@
 import React from "react";
-// import { TextField } from "final-form-material-ui";
 import { Field } from "react-final-form";
-import { Grid, Typography ,TextField} from "@material-ui/core";
+import { Grid, Typography, TextField } from "@material-ui/core";
 
-function PageRangeField() {
+const PageRangeField = ({ index, setStartPage, setEndPage }) => {
   return (
     <Grid container style={{ marginBottom: 20 }}>
       <Grid item>
@@ -13,6 +12,7 @@ function PageRangeField() {
           component={TextField}
           type="text"
           placeholder="Start"
+          onChange={(e) => setStartPage(index, e.target.value)}
         />
       </Grid>
       <Typography variant="h5" style={{ paddingLeft: 20, paddingRight: 20 }}>
@@ -25,10 +25,11 @@ function PageRangeField() {
           component={TextField}
           type="text"
           placeholder="End"
+          onChange={(e) => setEndPage(index, e.target.value)}
         />
       </Grid>
     </Grid>
   );
-}
+};
 
 export default PageRangeField;
