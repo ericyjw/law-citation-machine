@@ -28,6 +28,8 @@ const Journal = () => {
     pageRanges: [{ start: "", end: "" }],
   });
 
+  const [range, setRange]= useState("paragraph")
+
   /* ===== Author Name ===== */
   const addFirstName = (index, firstName) => {
     const author = formField.authors[index];
@@ -238,20 +240,44 @@ const Journal = () => {
                   </Field>
                 </Grid>
 
-                {/* ===== XXX ===== */}
-                <label className={classes.label}>XXX</label>
+                {/* ===== First Page of Journal Article ===== */}
+                <label className={classes.label}>First Page of Journal Article</label>
                 <Grid style={{ padding: 0 }} item xs={12}>
-                  <Field name="xxx">
+                  <Field name="firstPage">
                     {({ input }) => (
                       <TextField
                         required
-                        type="text"
-                        placeholder="Cannot read from the image"
+                        type="number"
+                        placeholder="First Page"
                         inputProps={input}
                       />
                     )}
                   </Field>
                 </Grid>
+
+                {/* <label className={classes.label}>Range</label>
+                <Grid style={{ padding: 0 }} item xs={12}>
+                  <label>
+                    <Field
+                      component="input"
+                      type="radio"
+                      value="paragraph"
+                      onClick={() => setRange("paragraph")}
+                    />
+                    Paragraph
+                  </label>
+                </Grid>
+                <Grid style={{ padding: 0 }} item xs={12}>
+                  <label>
+                    <Field
+                      component="input"
+                      type="radio"
+                      value="page"
+                      onClick={() => setRange("page")}
+                    />
+                    Page
+                  </label>
+                </Grid> */}
 
                 {/* ===== Paragraph ===== */}
                 <label className={classes.label}>Paragraph(s)</label>
@@ -309,6 +335,7 @@ const Journal = () => {
                   Submit
                 </Button>
               </Grid>
+              {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
             </form>
           )}
         />

@@ -20,7 +20,6 @@ const ParagraphField = ({ index, setStartPara, setEndPara }) => {
       </Typography>
       <Grid>
         <Field
-          required
           name="endPara"
           component={TextField}
           type="text"
