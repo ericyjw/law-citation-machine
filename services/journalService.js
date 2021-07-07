@@ -1,10 +1,12 @@
 import {BASE_URL} from "../constants";
 const axios = require("axios")
 
-export const submitFormToServer = (formData) => {
-    axios.post(`${BASE_URL}/api/journal`, {
+export const submitFormToServer = async (formData) => {
+    const res =  await axios.post(`${BASE_URL}/api/journal`, {
         formData
-    }).then(res => {
-        console.log(res.data)
-    })
+    });
+
+    console.log("res.data: ",res.data);
+    return res.data.payload;
+
 }

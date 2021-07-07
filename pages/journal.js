@@ -8,12 +8,16 @@ import ParagraphField from "../components/journal/ParagraphField";
 import PageRangeField from "../components/journal/PageRangeField";
 
 import { submitFormToServer } from "../services/journalService";
+import { useRouter } from "next/router";
+import { useReducer } from "react";
+
+import AppContext from "../context/app-context";
+import { useContext } from "react";
 
 const Journal = () => {
-  if (typeof window === "undefined") {
-    return <h1>Error</h1>;
-  }
-
+  const router = useRouter();
+  const { setFormatted } = useContext(AppContext);
+  
   const classes = useStyles();
 
   const [formField, setFormField] = useState({
@@ -28,7 +32,7 @@ const Journal = () => {
     pageRanges: [{ start: "", end: "" }],
   });
 
-  const [range, setRange]= useState("paragraph")
+  const [range, setRange] = useState("paragraph");
 
   /* ===== Author Name ===== */
   const addFirstName = (index, firstName) => {
@@ -141,7 +145,11 @@ const Journal = () => {
   };
 
   const onSubmit = async (values) => {
-    submitFormToServer({ ...formField, ...values });
+    const formatted = await submitFormToServer({ ...formField, ...values });
+    setFormatted(formatted);
+    router.push({
+      pathname: "/result",
+    });
   };
 
   return (
@@ -241,7 +249,9 @@ const Journal = () => {
                 </Grid>
 
                 {/* ===== First Page of Journal Article ===== */}
-                <label className={classes.label}>First Page of Journal Article</label>
+                <label className={classes.label}>
+                  First Page of Journal Article
+                </label>
                 <Grid style={{ padding: 0 }} item xs={12}>
                   <Field name="firstPage">
                     {({ input }) => (
@@ -335,7 +345,8 @@ const Journal = () => {
                   Submit
                 </Button>
               </Grid>
-              {/* <pre>{JSON.stringify(values, 0, 2)}</pre> */}
+              {/* <pre>{JSON.stringify(values, 0, 2)}</pre>
+              <pre>{values}</pre> */}
             </form>
           )}
         />
