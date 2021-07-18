@@ -14,10 +14,19 @@ import { useReducer } from "react";
 import AppContext from "../context/app-context";
 import { useContext } from "react";
 
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  DatePicker,
+  TimePicker,
+  DateTimePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
+import moment from "moment";
+
 const Journal = () => {
   const router = useRouter();
   const { setFormatted } = useContext(AppContext);
-  
+
   const classes = useStyles();
 
   const [formField, setFormField] = useState({
@@ -28,6 +37,7 @@ const Journal = () => {
         lastName: "",
       },
     ],
+    year: moment().format("YYYY"),
     paraRanges: [{ start: "", end: "" }],
     pageRanges: [{ start: "", end: "" }],
   });
@@ -87,6 +97,16 @@ const Journal = () => {
       ],
     });
   };
+
+  const handleYearChange = (newYear) => {
+    newYear = moment(newYear).format("YYYY")
+    console.log("newYear => ", newYear)
+    setFormField({
+      ...formField,
+      year: newYear,
+    });
+  }
+
 
   /* ===== Paragraph ===== */
   const setStartPara = (index, paraNum) => {
@@ -207,12 +227,15 @@ const Journal = () => {
                 <Grid style={{ padding: 0 }} item xs={12}>
                   <Field name="year">
                     {({ input }) => (
-                      <TextField
-                        required
-                        type="date"
-                        placeholder="Year"
-                        inputProps={input}
-                      />
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <DatePicker
+                          value={formField.year}
+                          onChange={handleYearChange}
+                          views={["year"]}
+                          maxDate={new Date()}
+                        />
+
+                      </MuiPickersUtilsProvider>
                     )}
                   </Field>
                 </Grid>
