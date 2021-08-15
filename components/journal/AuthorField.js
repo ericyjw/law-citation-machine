@@ -1,7 +1,6 @@
 import React from "react";
 import { Field } from "react-final-form";
-import { Grid, TextField } from "@material-ui/core";
-import IconButton from '@material-ui/core/IconButton';
+import { Grid, TextField, IconButton } from "@material-ui/core";
 import DeleteIcon from '@material-ui/icons/Delete';
 
 const NAME_TYPE = {
@@ -10,38 +9,28 @@ const NAME_TYPE = {
   LAST_NAME: "lastName"
 }
 
-const AuthorField = ({ author, index, setFirstName, setMiddleName, setLastName, deleteAuthor }) => {
+const AuthorField = ({ author, index, setFirstName, setMiddleName, setLastName, deleteAuthor, count}) => {
   return (
     <Grid
       container
-      style={{ justifyContent: "space-between", marginBottom: 20 }}
+      style={{ justifyContent: "space-between", marginBottom: 10, marginTop: 10 }}
     >
       {NameField(NAME_TYPE.FIRST_NAME, index, author, setFirstName)}
       {NameField(NAME_TYPE.MIDDLE_NAME, index, author, setMiddleName)}
       {NameField(NAME_TYPE.LAST_NAME, index, author, setLastName)}
-      <Grid item>
-        <div style={{ width: 50 }}>
-          {index > 0 && <IconButton onClick={() => deleteAuthor(index)}>
-            <DeleteIcon />
-          </IconButton>}
-        </div>
-      </Grid>
-
-
+      {DeleteButton(index, count, deleteAuthor)}
     </Grid>
   );
 };
 
 const NameField = (nameType, index, author, setFunction) => {
   return (
-    <Grid item>
-      <Field
-        style={{ width: 300 }}
-        fullWidth
-      >
+    <Grid item xs={3}>
+      <Field style={{ width: 300 }}>
         {props => (
           <div>
             <TextField
+              fullWidth
               name={nameType}
               type="text"
               required={nameType !== NAME_TYPE.MIDDLE_NAME}
@@ -54,6 +43,17 @@ const NameField = (nameType, index, author, setFunction) => {
       </Field>
     </Grid>
   )
+}
+
+const DeleteButton = (index, count, deleteAuthor) => {
+  return (
+    <Grid item>
+      <div style={{ width: 50 }}>
+        {count > 1 && <IconButton onClick={() => deleteAuthor(index)} >
+          <DeleteIcon />
+        </IconButton>}
+      </div>
+    </Grid>);
 }
 
 const getValue = (nameType, author) => {
@@ -78,7 +78,7 @@ const getPlaceHolder = (nameType) => {
     case NAME_TYPE.LAST_NAME:
       return "Last Name";
     default:
-      return "null";
+      return "";
   }
 }
 
