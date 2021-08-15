@@ -23,12 +23,18 @@ import {
 } from "@material-ui/pickers";
 import moment from "moment";
 
-const Journal = () => {
-  const router = useRouter();
-  const { setFormatted } = useContext(AppContext);
+import Result from "./result";
 
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+
+const Journal = () => {
   const classes = useStyles();
 
+  const [formatted, setFormatted] = useState("");
   const [formField, setFormField] = useState({
     authors: [
       {
@@ -98,6 +104,7 @@ const Journal = () => {
     });
   };
 
+  /* ===== Year ===== */
   const handleYearChange = (newYear) => {
     newYear = moment(newYear).format("YYYY")
     console.log("newYear => ", newYear)
@@ -106,7 +113,6 @@ const Journal = () => {
       year: newYear,
     });
   }
-
 
   /* ===== Paragraph ===== */
   const setStartPara = (index, paraNum) => {
@@ -135,6 +141,69 @@ const Journal = () => {
       paraRanges: [...formField.paraRanges, { start: "", end: "" }],
     });
   };
+
+  const [optionalField, setOptionalField] = useState("none")
+  const handleRadioChange = (event) => {
+    setOptionalField(event.target.value);
+  };
+  const getOptionalField = () => {
+    switch (optionalField) {
+      case "none":
+        return <div></div>;
+      case "paragraph":
+        return (<div>
+          <label className={classes.label}>Paragraph(s)</label>
+          {formField.paraRanges.map((_, idx) => {
+            return (
+              <ParagraphField
+                key={idx}
+                index={idx}
+                setStartPara={setStartPara}
+                setEndPara={setEndPara}
+              />
+            );
+          })}
+          <Grid container>
+            <Button
+              style={{ marginTop: 10 }}
+              variant="contained"
+              color="secondary"
+              onClick={addPara}
+            >
+              Add Paragraph
+            </Button>
+          </Grid>
+        </div>);
+
+      case "page":
+        return (<div>
+          {/* ===== Page Range ===== */}
+          <label className={classes.label}>Page Range(s)</label>
+          {formField.pageRanges.map((item, idx) => {
+            return (
+              <PageRangeField
+                key={idx}
+                index={idx}
+                setStartPage={setStartPage}
+                setEndPage={setEndPage}
+              />
+            );
+          })}
+          <Grid container>
+            <Button
+              style={{ marginTop: 10 }}
+              variant="contained"
+              color="secondary"
+              onClick={addPage}
+            >
+              Add Page Range
+            </Button>
+          </Grid>
+        </div>);
+      default:
+        return <div></div>;
+    }
+  }
 
   /* ===== Page Range ===== */
   const setStartPage = (index, pageNum) => {
@@ -167,128 +236,128 @@ const Journal = () => {
   const onSubmit = async (values) => {
     const formatted = await submitFormToServer({ ...formField, ...values });
     setFormatted(formatted);
-    router.push({
-      pathname: "/result",
-    });
   };
 
   return (
-    <div style={{ padding: 16, minWidth: 600 }}>
-      <Typography variant="h4" align="center" component="h1" gutterBottom>
-        Journal / Article
-      </Typography>
-      <Paper elevation={3} style={{ padding: 20 }}>
-        <Form
-          onSubmit={onSubmit}
-          render={({ handleSubmit, form, submitting, pristine, values }) => (
-            <form onSubmit={handleSubmit}>
-              <Grid container alignItems="flex-start" spacing={2}>
-                {/* ===== Name ===== */}
-                <label className={classes.label}>Journal / Article Name</label>
-                <Grid style={{ padding: 0 }} item xs={12}>
-                  <Field name="title" type="text">
-                    {({ input }) => (
-                      <TextField
-                        required
-                        fullWidth
-                        placeholder="Journal/Article Name"
-                        inputProps={input}
-                      />
-                    )}
-                  </Field>
-                </Grid>
+    <div>
+      {formatted !== ""
+        ? <Result result={formatted} clearResult={setFormatted}></Result>
+        : <div style={{ padding: 16, minWidth: 600 }}>
+          <Typography variant="h4" align="center" component="h1" gutterBottom>
+            Journal / Article
+          </Typography>
+          <Paper elevation={3} style={{ padding: 20 }}>
+            <Form
+              onSubmit={onSubmit}
+              render={({ handleSubmit, form, submitting, pristine, values }) => (
+                <form onSubmit={handleSubmit}>
+                  <Grid container alignItems="flex-start" spacing={2}>
+                    {/* ===== Name ===== */}
+                    <label className={classes.label}>Journal / Article Name</label>
+                    <Grid style={{ padding: 0 }} item xs={12}>
+                      <Field name="title" type="text">
+                        {({ input }) => (
+                          <TextField
+                            required
+                            fullWidth
+                            placeholder="Journal/Article Name"
+                            inputProps={input}
+                          />
+                        )}
+                      </Field>
+                    </Grid>
 
-                {/* ===== Authors ===== */}
-                <label className={classes.label}>Author(s)</label>
-                {formField.authors.map((item, idx) => {
-                  return (
-                    <AuthorFields
-                      key={idx}
-                      index={idx}
-                      setFirstName={addFirstName}
-                      setMiddleName={addMiddleName}
-                      setLastName={addLastName}
-                    />
-                  );
-                })}
-                <Grid container>
-                  <Button
-                    style={{ marginTop: 10 }}
-                    variant="contained"
-                    color="secondary"
-                    onClick={addAuthor}
-                  >
-                    Add Author
-                  </Button>
-                </Grid>
-
-                {/* ===== Year of Publication ===== */}
-                <label className={classes.label}>Year of Publication</label>
-                <Grid style={{ padding: 0 }} item xs={12}>
-                  <Field name="year">
-                    {({ input }) => (
-                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <DatePicker
-                          value={formField.year}
-                          onChange={handleYearChange}
-                          views={["year"]}
-                          maxDate={new Date()}
+                    {/* ===== Authors ===== */}
+                    <label className={classes.label}>Author(s)</label>
+                    {formField.authors.map((item, idx) => {
+                      return (
+                        <AuthorFields
+                          key={idx}
+                          index={idx}
+                          setFirstName={addFirstName}
+                          setMiddleName={addMiddleName}
+                          setLastName={addLastName}
                         />
+                      );
+                    })}
+                    <Grid container>
+                      <Button
+                        style={{ marginTop: 10 }}
+                        variant="contained"
+                        color="secondary"
+                        onClick={addAuthor}
+                      >
+                        Add Author
+                      </Button>
+                    </Grid>
 
-                      </MuiPickersUtilsProvider>
-                    )}
-                  </Field>
-                </Grid>
+                    {/* ===== Year of Publication ===== */}
+                    <label className={classes.label}>Year of Publication</label>
+                    <Grid style={{ padding: 0 }} item xs={12}>
+                      <Field name="year">
+                        {({ input }) => (
+                          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                            <DatePicker
+                              value={formField.year}
+                              onChange={handleYearChange}
+                              views={["year"]}
+                              maxDate={new Date()}
+                            />
 
-                {/* ===== Journal Name ===== */}
-                <label className={classes.label}>Journal Name</label>
-                <Grid style={{ padding: 0 }} item xs={12}>
-                  <Field name="journalName" type="text">
-                    {({ input }) => (
-                      <TextField
-                        required
-                        fullWidth
-                        type="text"
-                        placeholder="Journal Name"
-                        inputProps={input}
-                      />
-                    )}
-                  </Field>
-                </Grid>
+                          </MuiPickersUtilsProvider>
+                        )}
+                      </Field>
+                    </Grid>
 
-                {/* ===== Volume Number ===== */}
-                <label className={classes.label}>Volume Number</label>
-                <Grid style={{ padding: 0 }} item xs={12}>
-                  <Field name="volNum">
-                    {({ input }) => (
-                      <TextField
-                        required
-                        type="number"
-                        placeholder="Volume Number"
-                        inputProps={input}
-                      />
-                    )}
-                  </Field>
-                </Grid>
+                    {/* ===== Journal Name ===== */}
+                    <label className={classes.label}>Journal Name</label>
+                    <Grid style={{ padding: 0 }} item xs={12}>
+                      <Field name="journalName" type="text">
+                        {({ input }) => (
+                          <TextField
+                            required
+                            fullWidth
+                            type="text"
+                            placeholder="Journal Name"
+                            inputProps={input}
+                          />
+                        )}
+                      </Field>
+                    </Grid>
 
-                {/* ===== First Page of Journal Article ===== */}
-                <label className={classes.label}>
-                  First Page of Journal Article
-                </label>
-                <Grid style={{ padding: 0 }} item xs={12}>
-                  <Field name="firstPage">
-                    {({ input }) => (
-                      <TextField
-                        required
-                        type="number"
-                        placeholder="First Page"
-                        inputProps={input}
-                      />
-                    )}
-                  </Field>
-                </Grid>
+                    {/* ===== Volume Number ===== */}
+                    <label className={classes.label}>Volume Number</label>
+                    <Grid style={{ padding: 0 }} item xs={12}>
+                      <Field name="volNum">
+                        {({ input }) => (
+                          <TextField
+                            required
+                            type="number"
+                            placeholder="Volume Number"
+                            inputProps={input}
+                          />
+                        )}
+                      </Field>
+                    </Grid>
 
-                {/* <label className={classes.label}>Range</label>
+                    {/* ===== First Page of Journal Article ===== */}
+                    <label className={classes.label}>
+                      First Page of Journal Article
+                    </label>
+                    <Grid style={{ padding: 0 }} item xs={12}>
+                      <Field name="firstPage">
+                        {({ input }) => (
+                          <TextField
+                            required
+                            type="number"
+                            placeholder="First Page"
+                            inputProps={input}
+                          />
+                        )}
+                      </Field>
+                    </Grid>
+
+                    {/* <label className={classes.label}>Range</label>
                 <Grid style={{ padding: 0 }} item xs={12}>
                   <label>
                     <Field
@@ -311,71 +380,41 @@ const Journal = () => {
                     Page
                   </label>
                 </Grid> */}
+                    <Grid style={{ padding: 0 }} item xs={12}>
+                      <RadioGroup row name="position" defaultValue="none" onChange={handleRadioChange}>
+                        <FormControlLabel value="none" control={<Radio color="primary" />} label="None" />
+                        <FormControlLabel value="paragraph" control={<Radio color="primary" />} label="Paragraph" />
+                        <FormControlLabel value="page" control={<Radio color="primary" />} label="Page" />
+                      </RadioGroup>
+                    </Grid>
+                    {getOptionalField()}
 
-                {/* ===== Paragraph ===== */}
-                <label className={classes.label}>Paragraph(s)</label>
-                {formField.paraRanges.map((_, idx) => {
-                  return (
-                    <ParagraphField
-                      key={idx}
-                      index={idx}
-                      setStartPara={setStartPara}
-                      setEndPara={setEndPara}
-                    />
-                  );
-                })}
-                <Grid container>
-                  <Button
-                    style={{ marginTop: 10 }}
-                    variant="contained"
-                    color="secondary"
-                    onClick={addPara}
-                  >
-                    Add Paragraph
-                  </Button>
-                </Grid>
 
-                {/* ===== Page Range ===== */}
-                <label className={classes.label}>Page Range(s)</label>
-                {formField.pageRanges.map((item, idx) => {
-                  return (
-                    <PageRangeField
-                      key={idx}
-                      index={idx}
-                      setStartPage={setStartPage}
-                      setEndPage={setEndPage}
-                    />
-                  );
-                })}
-              </Grid>
-              <Grid container>
-                <Button
-                  style={{ marginTop: 10 }}
-                  variant="contained"
-                  color="secondary"
-                  onClick={addPage}
-                >
-                  Add Page Range
-                </Button>
-              </Grid>
-              <Grid container>
-                <Button
-                  style={{ marginTop: 20 }}
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                >
-                  Submit
-                </Button>
-              </Grid>
-              {/* <pre>{JSON.stringify(values, 0, 2)}</pre>
+
+
+
+                  </Grid>
+                  <Grid container>
+                    <Button
+                      style={{ marginTop: 20 }}
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                    >
+                      Submit
+                    </Button>
+                  </Grid>
+                  {/* <pre>{JSON.stringify(values, 0, 2)}</pre>
               <pre>{values}</pre> */}
-            </form>
-          )}
-        />
-      </Paper>
-    </div>
-  );
+                </form>
+              )}
+            />
+          </Paper>
+        </div>
+      }
+    </div>);
+
+
 };
 
 const useStyles = makeStyles({
