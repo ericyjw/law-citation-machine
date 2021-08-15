@@ -7,7 +7,7 @@ const ParagraphField = ({ index, setStartPara, setEndPara }) => {
     <Grid container style={{ marginBottom: 20 }}>
       <Grid item>
         <Field
-          required
+          // required
           name="startPara"
           component={TextField}
           type="text"
