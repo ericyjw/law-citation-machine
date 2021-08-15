@@ -11,7 +11,7 @@ const PAGE_TYPE = {
 
 const PageRangeField = ({ index, page, setStartPage, setEndPage, deletePageRange, count}) => {
   return (
-    <Grid container style={{ marginBottom: 20 }}>
+    <Grid container style={{ marginBottom: 10, marginTop: 10 }}>
       {PageField(PAGE_TYPE.START, index, page, setStartPage)}
       <Typography variant="h5" style={{ paddingLeft: 20, paddingRight: 20 }}>
         {EN_DASH}
@@ -22,18 +22,18 @@ const PageRangeField = ({ index, page, setStartPage, setEndPage, deletePageRange
   );
 };
 
-const PageField = (paraType, index, paragraphs, setFunction) => {
+const PageField = (pageType, index, page, setFunction) => {
   return (
     <Grid item>
       <Field>
         {props => (
           <div>
             <TextField
-              name={paraType}
+              name={pageType}
               type="text"
-              required={paraType === PAGE_TYPE.START}
-              placeholder={getPlaceHolder(paraType)}
-              value={getValue(paraType, paragraphs)}
+              required={pageType === PAGE_TYPE.START}
+              placeholder={getPlaceHolder(pageType)}
+              value={getValue(pageType, page)}
               onChange={(e) => setFunction(index, e.target.value)}
             />
           </div>
