@@ -3,6 +3,7 @@ import Image from "next/image";
 import styles from "../styles/Home.module.css";
 import { useRouter } from "next/router";
 
+
 export default function Home() {
   const router = useRouter();
 
@@ -18,12 +19,12 @@ export default function Home() {
         <h1 className={styles.title}>Welcome to Law Citation Machine!</h1>
 
         <div className={styles.grid}>
-          <div onClick={() => router.push("/journal")} className={styles.card}>
-            <h2>Journal / Article &rarr;</h2>
+          <div onClick={() => router.push("/case")} className={styles.card}>
+            <h2>Case &rarr;</h2>
             <p>Let's go!</p>
           </div>
 
-          <div onClick={() => router.push("/about")} className={styles.card}>
+          <div onClick={() => router.push("/journal")} className={styles.card}>
             <h2>Journal / Article &rarr;</h2>
             <p>Let's go!</p>
           </div>

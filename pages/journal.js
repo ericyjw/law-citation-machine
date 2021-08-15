@@ -4,7 +4,7 @@ import { Typography, Paper, Grid, Button, TextField } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 
 import AuthorFields from "../components/journal/AuthorField";
-import ParagraphField from "../components/journal/ParagraphField";
+import ParaRangeField from "../components/journal/ParaRangeField";
 import PageRangeField from "../components/journal/PageRangeField";
 
 import { submitFormToServer } from "../services/journalService";
@@ -104,6 +104,15 @@ const Journal = () => {
     });
   };
 
+  const deleteAuthor = (index) => {
+    const authors = formField.authors;
+    const updated = authors.filter((author) => author !== authors[index]);
+    setFormField({
+      ...formField,
+      authors: [...updated],
+    });
+  }
+
   /* ===== Year ===== */
   const handleYearChange = (newYear) => {
     newYear = moment(newYear).format("YYYY")
@@ -153,13 +162,16 @@ const Journal = () => {
       case "paragraph":
         return (<div>
           <label className={classes.label}>Paragraph(s)</label>
-          {formField.paraRanges.map((_, idx) => {
+          {formField.paraRanges.map((paragraph, idx) => {
             return (
-              <ParagraphField
+              <ParaRangeField
                 key={idx}
                 index={idx}
+                paragraph={paragraph}
                 setStartPara={setStartPara}
                 setEndPara={setEndPara}
+                deleteParaRange={deleteParaRange}
+                count={formField.paraRanges.length}
               />
             );
           })}
@@ -179,13 +191,16 @@ const Journal = () => {
         return (<div>
           {/* ===== Page Range ===== */}
           <label className={classes.label}>Page Range(s)</label>
-          {formField.pageRanges.map((item, idx) => {
+          {formField.pageRanges.map((page, idx) => {
             return (
               <PageRangeField
                 key={idx}
                 index={idx}
+                page={page}
                 setStartPage={setStartPage}
                 setEndPage={setEndPage}
+                deletePageRange={deletePageRange}
+                count={formField.pageRanges.length}
               />
             );
           })}
@@ -233,6 +248,24 @@ const Journal = () => {
     });
   };
 
+  const deletePageRange = (index) => {
+    const pageRanges = formField.pageRanges;
+    const updated = pageRanges.filter((page) => page !== pageRanges[index]);
+    setFormField({
+      ...formField,
+      pageRanges: [...updated],
+    });
+  };
+
+  const deleteParaRange = (index) => {
+    const paraRanges = formField.paraRanges;
+    const updated = paraRanges.filter((para) => para !== paraRanges[index]);
+    setFormField({
+      ...formField,
+      paraRanges: [...updated],
+    });
+  };
+
   const onSubmit = async (values) => {
     const formatted = await submitFormToServer({ ...formField, ...values });
     setFormatted(formatted);
@@ -274,9 +307,12 @@ const Journal = () => {
                         <AuthorFields
                           key={idx}
                           index={idx}
+                          author={item}
                           setFirstName={addFirstName}
                           setMiddleName={addMiddleName}
                           setLastName={addLastName}
+                          deleteAuthor={deleteAuthor}
+                          count={formField.authors.length}
                         />
                       );
                     })}
